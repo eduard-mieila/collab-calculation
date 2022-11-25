@@ -1,0 +1,66 @@
+MIEILA Eduard-Robert, 333CA
+Algoritmi Paraleli si Distribuiti
+Tema 3 - Calcule colaborative in sisteme distribuite
+
+Pentru rezolvarea acestei teme, am impartit pasii de rezolvare astfel:
+    0. Verificare numar de parametri, initializare vector V
+
+    1. Stabilirea topologiei (Task 1)
+        1.A. Procesele coordonatoare(0, 1 si 2)
+            1.A.i. Deschid fisierele, extrag datele referitoare la workerii lor,
+                   inchid fisierele.
+            1.A.ii. Trimit workeri-lor un mesaj cu id-ul lor
+                    pentru ca acestea sa stie cu cine vor comunica mai departe.
+            1.A.iii. Trimit lista lor de workeri catre celelalte procese
+                     coordonatoare, astfel incat, dupa un schimb de mesaje intre
+                     0, 1 si 2, coordonatori vor cunoaste topologia sistemului.
+            1.A.iv. Trimit topologia catre toti workerii lor.
+            1.A.v. Afiseaza topologia.
+
+        1.B. Workerii
+            1.B.i. Asteapta, de la unul dintre coordonatori, rank-ul procesului
+                   ce il va coordona.
+            1.B.ii. Primeste si afiseaza topologia sistemului de la coordonator.
+    
+    2. Distribuire subvectori catre workeri si efectuarea operatiilor (Task 2a)
+        2.A. Procesul 0
+            2.A.i. Determina indecsii de start si final, plus dimensiunea
+                   totala a vectorului ce urmeaza sa fie prelucrat de workeri.
+            2.A.ii. Trimite numarul de elemente ce il va prelucra fiecare
+                    worker astfel: daca worker-ul catre care se trimit datele
+                    este direct conectat la Procesul 0, acestea pleaca direct
+                    catre worker, altfel, mesajele merg catre unul dintre
+                    ceilalti 2 coordonatori(in functie de ce se afla in vectorul
+                    parents).
+            2.A.iii. Trimite subvectorii catre workeri(similar cu pasul 2.A.ii).
+
+        2.B. Procesele 1 si 2
+            2.B.i. Primesc, de la procesul 0, numarul de elemente din vector si
+                   il trimit mai departe catre workeri.
+            2.B.ii. Primesc subvectorii fiecarui worker, in ordinea din matricea
+                    workers, si paseaza subvectorii mai departe(se calculeaza si
+                    se retine, pentru viitor, dimensiunea fiecarui subvector.
+                    Util la reasamblarea vectorului).
+        
+        2.C. Workerii
+            2.C.i. Primesc numarul elementelor din vector.
+            2.C.ii. Isi calculeaza dimensiunea subvectorului.
+            2.C.iii. Primesc subvectorul de la coordonator.
+            2.C.iv. Dubleaza elemenetele din subvector.
+
+    3. Asamblarea subvectorilor de la workeri (Task 2b)
+        3.A. Procesul 0
+            3.A.i. Primeste rezultatele partiale de la workeri/coordonatori
+            3.A.ii. Scrie subvectorii in vectorul V, tinand cont de pozitia la
+                    care trebuie sa fie scrise valorile.
+        3.B. Procesele 1 si 2
+            3.B.i. Primesc rezultatele partiale de la workeri.
+            3.B.ii. Trimit rezultatele partiale catre coordonatorul 0.
+        
+        3.C. Workerii
+            3.C.i. Trimit rezultatele partiale catre coordonatori.
+
+    4. Afisarea rezultatului(doar procesul 0)
+
+Toate functiile create si utilizate contin, in cod, comentarii ce descriu
+modul lor de operare.
